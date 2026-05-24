@@ -1,0 +1,37 @@
+main file:
+
+setup()
+loop()
+
+
+stepper file:
+
+class stepper:
+    setupStepper()
+    stepStepper()
+
+
+servo file:
+
+class servo:
+    setupStepper()
+    stepStepper()
+
+
+timer file:
+
+class timer:
+public:
+    setTimePeriod()
+    setEnabled()
+    canRun()
+private:
+    timePeriod
+    enabled
+    previousRunTime
+
+
+serial_input file:
+
+receivedChars[]
+recvChars()

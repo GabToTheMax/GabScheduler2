@@ -1,7 +1,8 @@
 main file:
 
-setup()
-loop()
+setup() -> setupStepper setupServo
+loop() -> stepStepper stepServo takeInput
+takeInput() -> recvChars tokenizer
 
 
 stepper file:
@@ -14,8 +15,8 @@ class stepper:
 servo file:
 
 class servo:
-    setupStepper()
-    stepStepper()
+    setupServo()
+    stepServo()
 
 
 timer file:

@@ -4,4 +4,4 @@
 
 extern char receivedChars[MAX_MESSAGE_LENGTH];
 
-void recvChars();
+extern void recvChars();

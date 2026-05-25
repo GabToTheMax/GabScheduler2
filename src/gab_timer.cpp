@@ -3,6 +3,8 @@
 
 Timer::Timer() {
   previousRunTime = 0;
+  timePeriod = 0; 
+  enabled = false;
 }
 
 void Timer::setTimePeriod(int t) {

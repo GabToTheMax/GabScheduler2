@@ -1,0 +1,53 @@
+#include <Servo.h>
+#include <gab_servo.hpp>
+#include <gab_timer.hpp>
+#include <Arduino.h>
+
+GabServo::GabServo(int pin) {
+    servo.attach(pin);
+    timer.setTimePeriod(10);
+    currentPosition = 0;
+    targetPosition = 0;
+    servo.write(0);
+}
+
+float GabServo::getCurrentPosition() {
+    return currentPosition;
+}
+
+void GabServo::setTargetPosition(float position) {
+    targetPosition = position;
+}
+
+void GabServo::setTimePeriod(int timePeriod) {
+    timer.setTimePeriod(timePeriod);
+}
+
+void GabServo::step() {
+    if(timer.canRun()) {
+        if(currentPosition > targetPosition)
+        {
+        currentPosition--;
+        }
+        else if(currentPosition < targetPosition)
+        {
+        currentPosition++;
+        }
+        if(currentPosition == targetPosition)
+        {
+        timer.setEnabled(false);
+        }
+
+        servo.write(currentPosition);
+
+        Serial.print("Tool ");
+        Serial.println(servo.read());
+    }
+}
+    
+// private:
+//     int targetPosition;
+//     int currentPosition;
+//     Servo servo;
+//     Timer timer;
+// };

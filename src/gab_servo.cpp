@@ -7,20 +7,8 @@ GabServo::GabServo(int pin) {
     servo.attach(pin);
     timer.setTimePeriod(10);
     currentPosition = 0;
-    targetPosition = 0;
+    targetPosition = 0;                                                                                                                                                                                         
     servo.write(0);
-}
-
-float GabServo::getCurrentPosition() {
-    return currentPosition;
-}
-
-void GabServo::setTargetPosition(float position) {
-    targetPosition = position;
-}
-
-void GabServo::setTimePeriod(int timePeriod) {
-    timer.setTimePeriod(timePeriod);
 }
 
 void GabServo::step() {

@@ -2,20 +2,14 @@
 
 #include <Servo.h>
 #include <gab_timer.hpp>
-
+#include <rotational_device.hpp>
  
-class GabServo {
+class GabServo: public RotationalDevice {
 public:
     GabServo(int pin);
 
-    float getCurrentPosition();
-    void setTargetPosition(float position);
-    void setTimePeriod(int timePeriod);
-    void step();
+    void step() override;
     
 private:
-    int targetPosition;
-    int currentPosition;
     Servo servo;
-    Timer timer;
 };

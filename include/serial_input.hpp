@@ -2,6 +2,25 @@
 
 #include <constants.hpp>
 
-extern char receivedChars[MAX_MESSAGE_LENGTH];
+union Value {
+  char* string;
+  char character;
+  float number;
+};
 
-extern void recvChars();
+enum class Datatype {
+  COMMAND,
+  SUBCOMMAND,
+  PREFIX,
+  VALUE,
+  OPERATOR
+};
+
+struct Token {
+  Datatype datatype;
+  Value value;
+};
+
+extern Token tokens[MAX_TOKENS];
+
+void takeInput();

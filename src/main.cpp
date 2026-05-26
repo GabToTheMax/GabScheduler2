@@ -4,6 +4,8 @@
 #include <gab_servo.hpp>
 #include <constants.hpp>
 
+void tokenPrinter(Token inputTokens[]);
+
 GabServo TH(TOOL_PIN);
 GabStepper J1(1, J1_STEP, J1_DIR);
 RotationalDevice* devices[2] = 
@@ -14,37 +16,52 @@ RotationalDevice* devices[2] =
 
 void setup() {
   Serial.begin(9600);
+  delay(500);
+  Serial.println("<Active>");
 }
 
-int counterThing = 0;
-
 void loop() {
-  Serial.print(counterThing++);
-  Serial.println("test");
   takeInput();
+  if(newTokens)
+  {
+    tokenPrinter(tokens);
+    newTokens = false;
+  }
+
+  for(int i = 0; i < DEVICES_COUNT; i++)
+  {
+    devices[i]->step();
+  }
+}
+
+void tokenPrinter(Token inputTokens[]) {
   for(int i = 0; i < MAX_TOKENS; i++)
   {
-    Serial.print((int)tokens[i].datatype);
-    switch (tokens[i].datatype)
+    switch (inputTokens[i].datatype)
     {
     case Datatype::OPERATOR:
-      Serial.print(tokens[i].value.character);
+      Serial.print("OPERATOR ");
+      Serial.print(inputTokens[i].value.character);
       break;
 
     case Datatype::COMMAND:
-      Serial.print(tokens[i].value.string);
+      Serial.print("COMMAND ");
+      Serial.print(inputTokens[i].value.string);
       break;
 
     case Datatype::SUBCOMMAND:
-      Serial.print(tokens[i].value.string);
+      Serial.print("SUBCOMMAND ");
+      Serial.print(inputTokens[i].value.string);
       break;
 
     case Datatype::PREFIX:
-      Serial.print(tokens[i].value.character);
+      Serial.print("PREFIX ");
+      Serial.print(inputTokens[i].value.character);
       break;
   
     case Datatype::VALUE:
-      Serial.print(tokens[i].value.number);
+      Serial.print("VALUE ");
+      Serial.print(inputTokens[i].value.number);
       break;
 
     default:
@@ -53,8 +70,4 @@ void loop() {
     Serial.println();
   }
 
-  for(int i = 0; i < DEVICES_COUNT; i++)
-  {
-    devices[i]->step();
-  }
 }

@@ -3,7 +3,7 @@
 #include <constants.hpp>
 
 union Value {
-  char* string;
+  char string[MAX_MESSAGE_LENGTH];
   char character;
   float number;
 };
@@ -21,6 +21,7 @@ struct Token {
   Value value;
 };
 
+extern bool newTokens;
 extern Token tokens[MAX_TOKENS];
 
 void takeInput();

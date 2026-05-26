@@ -2,48 +2,53 @@
 #include <constants.hpp>
 #include <serial_input.hpp>
 
+bool newMessage;
+bool newTokens;
+Token tokens[MAX_TOKENS];
 
 void recvChars();
 bool isFloatDigit(char c);
-void tokenizer();
+void tokenizer(char characters[], Token* out);
+void parseTokens(Token inputTokens[]);
 
-bool newMessage = false;
 char receivedChars[MAX_MESSAGE_LENGTH];
-Token tokens[MAX_TOKENS];
 
 void takeInput() {
   recvChars();
   if(newMessage == true)
-    tokenizer();
+  {
+    tokenizer(receivedChars, tokens);
+    newMessage = false;
+    newTokens = true;
+  }
 }
 
 void recvChars() {
-  if (Serial.available() != 0) {
-    int i = 0;
-    while (newMessage == false) {
-      bool newChar = false;
-      char currentChar;
+  if (Serial.available() == 0) return;
+  int i = 0;
+  while (newMessage == false) {
+    bool newChar = false;
+    char currentChar;
 
 
-      while (newChar == false) {
-        if (Serial.available() > 0) {
-          currentChar = Serial.read();
-          newChar = true;
-        }
+    while (newChar == false) {
+      if (Serial.available() > 0) {
+        currentChar = Serial.read();
+        newChar = true;
       }
+    }
 
-      if (currentChar == END_CHAR) {
+    if (currentChar == END_CHAR) {
+      receivedChars[i] = '\0';
+      newMessage = true;
+    } 
+    else {
+      receivedChars[i] = currentChar;
+      i++;
+      newChar = false;
+      if (i == MAX_MESSAGE_LENGTH - 1) {
         receivedChars[i] = '\0';
         newMessage = true;
-      } 
-      else {
-        receivedChars[i] = currentChar;
-        i++;
-        newChar = false;
-        if (i == MAX_MESSAGE_LENGTH - 1) {
-          receivedChars[i] = '\0';
-          newMessage = true;
-        }
       }
     }
   }
@@ -55,42 +60,42 @@ bool isFloatDigit(char c) {
   return false;
 }
 
-void tokenizer() {
-  int currentToken = 0;
+void tokenizer(char inputChars[], Token* outTokens) {
+  int t = 0;
   int i = 0;
-  while(receivedChars[i] != END_CHAR)
+  while(inputChars[i] != END_CHAR)
   {
-    char currentChar = receivedChars[i];
+    char currentChar = inputChars[i];
 
     // Command
     if (isAlpha(currentChar))
     {
-      char command[MAX_MESSAGE_LENGTH];
       int j = 0;
-      while(isAlpha(receivedChars[i])) {
-        command[j++] = receivedChars[i++];
+      while(isAlpha(inputChars[i])) {
+        outTokens[t].value.string[j++] = inputChars[i++];
       }
-      tokens[currentToken].datatype = Datatype::COMMAND;
-      tokens[currentToken].value.string = command;
+      outTokens[t].value.string[j] = '\0';
+      outTokens[t].datatype = Datatype::COMMAND;
+      
     }
 
     // Subcommand and Prefix
-    else if(currentChar == ' ' && isAlpha(receivedChars[++i]))
+    else if(currentChar == ' ' && isAlpha(inputChars[++i]))
     {
-      if(isFloatDigit(receivedChars[i+1]))
+      if(isFloatDigit(inputChars[i+1]))
       {
-        tokens[currentToken].datatype = Datatype::PREFIX;
-        tokens[currentToken].value.character = receivedChars[i];
+        outTokens[t].datatype = Datatype::PREFIX;
+        outTokens[t].value.character = inputChars[i];
+        i++;
       }
-      else if(isAlpha(receivedChars[i+1]))
+      else if(isAlpha(inputChars[i+1]))
       {
-        char subcommand[MAX_MESSAGE_LENGTH];
-        int j = 0;
-        while(isFloatDigit(receivedChars[i])) {
-          subcommand[j++] = receivedChars[i++];
-        }
-        tokens[currentToken].datatype = Datatype::SUBCOMMAND;
-        tokens[currentToken].value.string = subcommand;
+      int j = 0;
+      while(isAlpha(inputChars[i])) {
+        outTokens[t].value.string[j++] = inputChars[i++];
+      }
+      outTokens[t].value.string[j] = '\0';
+      outTokens[t].datatype = Datatype::SUBCOMMAND;
       }
     }
 
@@ -98,25 +103,26 @@ void tokenizer() {
     else if(isFloatDigit(currentChar)) {
       char rawNumber[MAX_MESSAGE_LENGTH];
       int j = 0;
-      while(isFloatDigit(receivedChars[i])) {
-        rawNumber[j++] = receivedChars[i++];
+      while(isFloatDigit(inputChars[i])) {
+        rawNumber[j++] = inputChars[i++];
       }
-      tokens[currentToken].datatype = Datatype::VALUE;
-      tokens[currentToken].value.number = atof(rawNumber);
+      rawNumber[j] = '\0';
+      outTokens[t].datatype = Datatype::VALUE;
+      outTokens[t].value.number = atof(rawNumber);
     }
 
     // Operators
     else if(!isAlpha(currentChar) && !isFloatDigit(currentChar)) {
-      tokens[currentToken].datatype = Datatype::OPERATOR;
-      tokens[currentToken].value.character = currentChar;
-      currentToken++;
+      outTokens[t].datatype = Datatype::OPERATOR;
+      outTokens[t].value.character = currentChar;
+      t++;
       break;
     }
 
     else {i++;}
 
-    currentToken++;
+    t++;
   }
-  tokens[currentToken].datatype = Datatype::OPERATOR;
-  tokens[currentToken].value.character = '\0';
+  tokens[t].datatype = Datatype::OPERATOR;
+  tokens[t].value.character = '\0';
 }

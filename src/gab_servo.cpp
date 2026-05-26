@@ -2,6 +2,7 @@
 #include <gab_servo.hpp>
 #include <gab_timer.hpp>
 #include <Arduino.h>
+#include <constants.hpp>
 
 GabServo::GabServo(int pin) {
     servo.attach(pin);
@@ -28,7 +29,8 @@ void GabServo::step() {
 
         servo.write(currentPosition);
 
-        Serial.print("Tool ");
+        //Serial.print(TOOL_PIN);
+        //Serial.print("Tool ");
         Serial.println(servo.read());
     }
 }

@@ -13,13 +13,20 @@ GabStepper::GabStepper(int type, int step, int dir) {
     timer.setEnabled(false);
 }
 
-void GabStepper::step() {
-  if(timer.canRun()) {
-    stepper.run();
-    if(!stepper.isRunning())
-      timer.setEnabled(false);
+void GabStepper::setTargetPosition(float position) {
+  targetPosition = position;
+  stepper.moveTo(targetPosition);
+}
 
-    Serial.print("J1 ");
-    Serial.println(stepper.currentPosition());
-  }
+void GabStepper::step()
+{
+    if (timer.canRun())
+    {
+        stepper.run();
+        if (!stepper.isRunning())
+            timer.setEnabled(false);
+
+        Serial.print("J1 ");
+        Serial.println(stepper.currentPosition());
+    }
 }

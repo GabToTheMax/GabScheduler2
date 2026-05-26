@@ -63,7 +63,7 @@ bool isFloatDigit(char c) {
 void tokenizer(char inputChars[], Token* outTokens) {
   int t = 0;
   int i = 0;
-  while(inputChars[i] != END_CHAR)
+  while(inputChars[i] != '\0')
   {
     char currentChar = inputChars[i];
 
@@ -116,7 +116,7 @@ void tokenizer(char inputChars[], Token* outTokens) {
       outTokens[t].datatype = Datatype::OPERATOR;
       outTokens[t].value.character = currentChar;
       t++;
-      break;
+      i++;
     }
 
     else {i++;}

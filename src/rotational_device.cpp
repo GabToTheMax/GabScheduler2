@@ -12,3 +12,7 @@ float RotationalDevice::getCurrentPosition() {
 void RotationalDevice::setTargetPosition(float position) {
     targetPosition = position;
 }
+
+void RotationalDevice::setEnabled(bool status) {
+    timer.setEnabled(status);
+}

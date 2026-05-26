@@ -3,6 +3,7 @@
 #include <gab_stepper.hpp>
 #include <gab_servo.hpp>
 #include <constants.hpp>
+#include <parse_input.hpp>
 
 void tokenPrinter(Token inputTokens[]);
 
@@ -24,6 +25,7 @@ void loop() {
   takeInput();
   if(newTokens)
   {
+    DetectCommand(tokens, devices);
     tokenPrinter(tokens);
     newTokens = false;
   }

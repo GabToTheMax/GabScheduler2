@@ -7,6 +7,8 @@ class Timer {
     void setTimePeriod(int t);
     void setEnabled(bool e);
     bool canRun();
+
+    
     
   private:
     int timePeriod;

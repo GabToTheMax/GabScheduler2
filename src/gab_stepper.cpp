@@ -3,19 +3,21 @@
 #include <gab_timer.hpp>
 #include <Arduino.h>
 
-GabStepper::GabStepper(int type, int step, int dir) {
+GabStepper::GabStepper() {
+    timer.setTimePeriod(10);
+    timer.setEnabled(false);
+}
+
+void GabStepper::init(int type, int step, int dir) {
     stepper = AccelStepper(type, step, dir);
     stepper.setMaxSpeed(800);
     stepper.setAcceleration(500);
     stepper.setCurrentPosition(0);
-
-    timer.setTimePeriod(1);
-    timer.setEnabled(false);
 }
 
 void GabStepper::setTargetPosition(float position) {
   targetPosition = position;
-  stepper.moveTo(targetPosition);
+  stepper.moveTo((long)targetPosition);
 }
 
 void GabStepper::step()
@@ -25,8 +27,5 @@ void GabStepper::step()
         stepper.run();
         if (!stepper.isRunning())
             timer.setEnabled(false);
-
-        Serial.print("J1 ");
-        Serial.println(stepper.currentPosition());
     }
 }

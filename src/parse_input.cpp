@@ -33,9 +33,10 @@ int PrefixToDevice(char c) {
 }
 
 void MVL(Token inputTokens[], RotationalDevice** devices) {
-    Serial.println("Detected MVL");
+    // Serial.println("Detected MVL");
     int i = 0; 
     while(i < MAX_TOKENS) {
+        Serial.println(i);
         if(inputTokens[i].datatype != Datatype::PREFIX) {i++; continue;}
         if(inputTokens[i+1].datatype != Datatype::VALUE) {i++; continue;}
         char prefix = inputTokens[i].value.character;

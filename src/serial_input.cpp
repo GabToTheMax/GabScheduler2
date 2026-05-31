@@ -14,9 +14,13 @@ void parseTokens(Token inputTokens[]);
 char receivedChars[MAX_MESSAGE_LENGTH];
 
 void takeInput() {
+  //Serial.print("Serial.available() outputs: ");
+  //Serial.println(Serial.available());
+
   recvChars();
   if(newMessage == true)
   {
+                                                                          Serial.println("New messag detected");
     tokenizer(receivedChars, tokens);
     newMessage = false;
     newTokens = true;
@@ -25,6 +29,7 @@ void takeInput() {
 
 void recvChars() {
   if (Serial.available() == 0) return;
+                                                                          Serial.println("Serial Available");
   int i = 0;
   while (newMessage == false) {
     bool newChar = false;

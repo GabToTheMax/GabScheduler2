@@ -7,16 +7,23 @@
 
 void tokenPrinter(Token inputTokens[]);
 
-GabServo TH(TOOL_PIN);
-GabStepper J1(1, J1_STEP, J1_DIR);
+GabServo TH;
+GabStepper J1;
 RotationalDevice* devices[2] = 
 {
   &TH, 
   &J1
 };
 
+void initlaise_devices()
+{
+  TH.attach(TOOL_PIN);
+  J1.init(1, J1_STEP, J1_DIR);
+}
+
 void setup() {
   Serial.begin(9600);
+  initlaise_devices();
   delay(500);
   Serial.println("<Active>");
 }
@@ -26,7 +33,7 @@ void loop() {
   if(newTokens)
   {
     DetectCommand(tokens, devices);
-    tokenPrinter(tokens);
+    // tokenPrinter(tokens);
     newTokens = false;
   }
 

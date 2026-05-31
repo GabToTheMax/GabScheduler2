@@ -4,12 +4,15 @@
 #include <Arduino.h>
 #include <constants.hpp>
 
-GabServo::GabServo(int pin) {
-    servo.attach(pin);
+GabServo::GabServo() {
     timer.setTimePeriod(10);
     currentPosition = 0;
     targetPosition = 0;                                                                                                                                                                                         
     servo.write(0);
+}
+
+void GabServo::attach(int pin) {
+    servo.attach(pin);
 }
 
 void GabServo::step() {
@@ -29,15 +32,7 @@ void GabServo::step() {
 
         servo.write(currentPosition);
 
-        //Serial.print(TOOL_PIN);
-        //Serial.print("Tool ");
+        Serial.print("T ");
         Serial.println(servo.read());
     }
 }
-    
-// private:
-//     int targetPosition;
-//     int currentPosition;
-//     Servo servo;
-//     Timer timer;
-// };

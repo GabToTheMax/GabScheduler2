@@ -7,6 +7,7 @@
 class RotationalDevice {
 public:
     virtual void step() = 0;
+
     virtual void setTargetPosition(float position);
     float getCurrentPosition();
     void setTimePeriod(int timePeriod);

@@ -7,9 +7,10 @@
  
 class GabStepper: public RotationalDevice {
 public:
-    GabStepper(int type, int step, int dir);
+    GabStepper();
 
     void setTargetPosition(float position) override;
+    void init(int type, int step, int dir);
     void step() override;
     
 private:

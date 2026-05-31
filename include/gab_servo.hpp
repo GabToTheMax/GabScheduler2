@@ -6,7 +6,9 @@
  
 class GabServo: public RotationalDevice {
 public:
-    GabServo(int pin);
+    GabServo();
+
+    void attach(int pin);
 
     void step() override;
     
